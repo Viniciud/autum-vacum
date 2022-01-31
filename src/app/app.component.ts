@@ -104,13 +104,13 @@ export class AppComponent implements OnInit {
       actionDirty: this.actionController.value.leftDirty,
     },
   ];
-  location: number = 0;
   places: PlaceModel[] = [
     { position: 'UP', status: 'CLEAN' },
     { position: 'RIGHT', status: 'CLEAN' },
     { position: 'DOWN', status: 'CLEAN' },
     { position: 'LEFT', status: 'CLEAN' },
   ];
+  location: number = 0;
 
   constructor(private formBuilder: FormBuilder) {}
 
@@ -119,7 +119,6 @@ export class AppComponent implements OnInit {
 
     setInterval(() => {
       this.updateActions();
-      // this.vacumAgent(this.state, this.location);
       let perceptions = this.agentPerceptions(this.location);
       this.agentActions(perceptions, this.location);
       console.log('PLACES ', this.places);
@@ -135,29 +134,6 @@ export class AppComponent implements OnInit {
     this.places[location].status = 'CLEAN';
   }
 
-  isClean(location: number) {
-    return this.places[location].status == 'CLEAN';
-  }
-
-  // vacumAgent(state: string, location: number) {
-  //   if (state == 'UP') {
-  //     this.state = this.actionController.value.upClean;
-  //     this.location = 1;
-  //   } else if (state == 'RIGHT') {
-  //     this.state = this.actionController.value.rightClean;
-  //     this.location = 2;
-  //   } else if (state == 'DOWN') {
-  //     this.state = this.actionController.value.downClean;
-  //     this.location = 3;
-  //   } else if (state == 'LEFT') {
-  //     this.state = this.actionController.value.leftClean;
-  //     this.location = 0;
-  //   } else if (this.action == 'SUCK') {
-  //     this.clearFloor(location);
-  //     this.state = this.places[location].position;
-  //   }
-  // }
-
   agentActions(perceptions: PerceptionModel, location: number) {
     console.log('ACTION ', perceptions);
     if (perceptions.action == 'SUCK') {
@@ -168,21 +144,15 @@ export class AppComponent implements OnInit {
     if (perceptions.action == 'UP') {
       this.location = 0;
     } else if (perceptions.action == 'RIGHT') {
-      this.state = this.actionController.value.rightClean;
       this.location = 1;
     } else if (perceptions.action == 'DOWN') {
-      this.state = this.actionController.value.downClean;
       this.location = 2;
     } else if (perceptions.action == 'LEFT') {
-      this.state = this.actionController.value.leftClean;
       this.location = 3;
     }
 
     if (perceptions.action != 'SUCK') {
-      this.state =
-        perceptions.status == 'CLEAN'
-          ? this.actions[location].actionClean
-          : this.actions[location].actionDirty;
+      this.state = perceptions.action;
     }
   }
 
